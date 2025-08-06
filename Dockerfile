@@ -23,4 +23,4 @@ RUN playwright install firefox
 COPY . .
 
 # 8. El comando para iniciar tu aplicación
-CMD ["streamlit", "run", "app.py", "--server.port", "10000", "--server.address", "0.0.0.0"]
+CMD ["streamlit", "run", "Main.py", "--server.port", "10000", "--server.address", "0.0.0.0"]
