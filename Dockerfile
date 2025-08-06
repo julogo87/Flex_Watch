@@ -1,26 +1,26 @@
 # Dockerfile
 
-# Usa una imagen oficial de Python como base
+# 1. Usa una imagen oficial de Python como base
 FROM python:3.11-slim
 
-# Establece el directorio de trabajo dentro del contenedor
+# 2. Establece el directorio de trabajo
 WORKDIR /app
 
-# Instala las dependencias del sistema que Firefox necesita para correr en Linux
-# Esto se ejecuta como administrador (ROOT) de forma segura durante la construcción
-RUN playwright install-deps firefox
-
-# Copia el archivo de requerimientos e instálalos
+# 3. Copia SOLO el archivo de requerimientos primero
+# Esto aprovecha el caché de Docker. Si requirements.txt no cambia, no se reinstala todo.
 COPY requirements.txt .
+
+# 4. Instala las librerías de Python (esto instalará el COMANDO `playwright`)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Instala el NAVEGADOR Firefox en sí
-# Esto se ejecuta después de que las dependencias del sistema están listas
+# 5. AHORA, con el comando ya disponible, instala las dependencias del sistema
+RUN playwright install-deps firefox
+
+# 6. Y después, instala el NAVEGADOR Firefox
 RUN playwright install firefox
 
-# Copia el resto de los archivos de tu aplicación al contenedor
+# 7. Copia el resto de los archivos de tu aplicación
 COPY . .
 
-# El comando para iniciar tu aplicación
-# Render expone el puerto 10000 para los Web Services con Docker
+# 8. El comando para iniciar tu aplicación
 CMD ["streamlit", "run", "app.py", "--server.port", "10000", "--server.address", "0.0.0.0"]
