@@ -1,0 +1,8 @@
+streamlit
+pandas
+requests
+g4f
+playwright
+airportsdata
+fpdf2
+openpyxl
